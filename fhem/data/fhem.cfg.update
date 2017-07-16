@@ -1,0 +1,3 @@
+# FHEM updaten und beenden
+define Update notify global:INITIALIZED sleep 2;;update
+define Shutdown notify global:UPDATE sleep 2;;shutdown
