@@ -29,7 +29,7 @@ ENV NODE_ENV production
 RUN apt-get install -y --force-yes make make gcc g++
 
 # Homebridge installieren
-RUN npm install -g \
+RUN npm install --unsafe-perm -g \
 homebridge \
 homebridge-fhem \
 homebridge-http
