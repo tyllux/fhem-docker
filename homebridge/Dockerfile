@@ -1,14 +1,24 @@
 FROM debian:jessie
 
-MAINTAINER Matthias Kleine <info@haus-automatisierung.com>
+MAINTAINER Tyllux
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
 
-# Install dependencies
-RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y --force-yes --no-install-recommends apt-utils
-RUN apt-get install -y --force-yes xz-utils wget python libavahi-compat-libdnssd-dev
+# Updates installieren
+RUN apt-get update && \
+apt-get upgrade -y --force-yes && \
+apt-get dist-upgrade -y --force-yes && \
+apt-get install -y --force-yes --no-install-recommends apt-utils
 
+# Abhaengigkeiten & Pakete installieren
+RUN apt-get install -y --force-yes \
+wget \
+libavahi-compat-libdnssd-dev \
+python \
+xz-utils
+
+# Timezone einstellen
 RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure tzdata
 
 RUN wget https://nodejs.org/dist/v6.9.2/node-v6.9.2-linux-x64.tar.xz -P /tmp && cd /usr/local && tar -xvf /tmp/node-v6.9.2-linux-x64.tar.xz --strip=1
@@ -18,8 +28,13 @@ ENV NODE_ENV production
 
 RUN apt-get install -y --force-yes make make gcc g++
 
-RUN npm install -g homebridge homebridge-fhem homebridge-http
+# Homebridge installieren
+RUN npm install -g \
+homebridge \
+homebridge-fhem \
+homebridge-http
 
+#Port freigeben
 EXPOSE 51826
 
 COPY start.sh ./
