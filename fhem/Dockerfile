@@ -80,24 +80,24 @@ RUN cd /opt/fhem/www/ && git clone https://github.com/klein0r/fhem-style-haus-au
 # FHEM-User löschen
 RUN userdel fhem
 
-# Stamm-Verzeichnis setzen
+# Arbeits-Verzeichnis setzen
 WORKDIR "/opt/fhem"
 
 # Update-Config kopieren
-COPY /data/fhem.cfg.update /opt/fhem/fhem.cfg
+COPY /data/fhem.cfg.update ./fhem.cfg
 
 # Quellen für Update hinzufügen
 COPY data/FHEM/controls.txt ./FHEM/controls.txt
 
-# FHEM zum Updaten starten (notify in fhem.cfg)
+# FHEM updaten (durch Notify in der 'fhem.cfg')
 RUN perl fhem.pl fhem.cfg | tee /opt/fhem/log/fhem.log
+
+# Dateien kopieren
+COPY /data/fhem.cfg.example ./fhem.cfg
+COPY start.sh ./
 
 #Ports freigeben
 EXPOSE 8083 7072
 
-# Config kopieren
-COPY /data/fhem.cfg.example /opt/fhem/fhem.cfg
-
-# Start-Script kopieren & ausführen
-COPY start.sh ./
+# Start-Script ausführen
 CMD bash /opt/fhem/start.sh
